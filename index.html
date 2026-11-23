@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MTLL Challenger Buddies</title>
+<!-- MTLL Challenger Buddies sign-up · Code © Corey J. Ruff -->
+<meta name="description" content="Sign up to be a Buddy for MTLL Challenger athletes.">
+<meta name="theme-color" content="#2B3187">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="MTLL Buddies">
+<style>
+  :root {
+    --navy: #2B3187; --navy-dk: #1f2466; --red: #D3202A; --red-dk: #B01A22;
+    --ink: #1d1d2b; --muted: #5f6272; --line: #d9dbe6; --bg: #f3f4f8; --card: #ffffff;
+    --soft: #eef0fa; --ok: #1e7a46; --warn: #9a5b00;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 15px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  a { color: var(--navy); }
+  button { font: inherit; cursor: pointer; }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 0 16px 48px; }
+
+  /* Header */
+  header.hero { background: var(--card); border-bottom: 4px solid var(--navy); }
+  .hero-in { max-width: 1040px; margin: 0 auto; padding: 20px 16px; display: flex; gap: 24px; align-items: flex-start; }
+  .logo { width: 150px; height: auto; flex: none; }
+  .org { font-weight: 700; color: var(--muted); font-size: 14px; letter-spacing: .02em; }
+  h1 { margin: 2px 0 8px; color: var(--navy); font-size: 28px; line-height: 1.15; }
+  .byline { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; font-size: 14px; margin-bottom: 12px; }
+  .byline .who { display: inline-flex; align-items: center; gap: 6px; }
+  .desc { white-space: pre-line; color: #33364a; max-width: 70ch; }
+  .desc.clamped { max-height: 7.3em; overflow: hidden; -webkit-mask-image: linear-gradient(#000 60%, transparent); mask-image: linear-gradient(#000 60%, transparent); }
+  .more { background: none; border: 0; color: var(--navy); padding: 4px 0; font-weight: 600; }
+
+  /* Notices */
+  .notice { margin: 18px 0 0; padding: 12px 14px; border-radius: 8px; background: var(--soft); border: 1px solid #cfd3ee; }
+  .notice.warn { background: #fff6e5; border-color: #f0d49b; }
+  .meta-row { display: flex; flex-wrap: wrap; gap: 8px 16px; justify-content: space-between; align-items: center; margin: 22px 0 8px; color: var(--muted); font-size: 13px; }
+  .manage-btn { background: var(--card); border: 1px solid var(--navy); color: var(--navy); border-radius: 6px; padding: 7px 12px; font-weight: 600; font-size: 13px; }
+  .manage-btn:hover { background: var(--soft); }
+  #lk-code { text-transform: uppercase; letter-spacing: 3px; font-weight: 700; }
+
+  /* Schedule grid */
+  .sched { background: var(--card); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+  .sched-head, .day { display: grid; grid-template-columns: 140px 190px 1fr; }
+  .sched-head { background: var(--navy); color: #fff; font-weight: 700; font-size: 13px; }
+  .sched-head > div { padding: 10px 14px; }
+  .sched-head .h-slot { display: grid; grid-template-columns: 120px 1fr; padding: 0; }
+  .sched-head .h-slot > div { padding: 10px 14px; }
+  .day { border-top: 1px solid var(--line); }
+  .day:first-of-type { border-top: 0; }
+  .day.past { opacity: .6; }
+  .c-date, .c-loc { padding: 14px; border-right: 1px solid var(--line); }
+  .c-date .d { font-weight: 700; color: var(--red); font-size: 16px; }
+  .c-date .w { color: var(--muted); }
+  .c-loc .loc { font-weight: 600; }
+  .c-loc a { font-size: 13px; color: var(--muted); text-decoration: none; display: inline-block; margin-top: 2px; }
+  .c-loc a:hover { color: var(--navy); text-decoration: underline; }
+  .slot { display: grid; grid-template-columns: 120px 1fr; border-top: 1px solid var(--line); }
+  .slot:first-child { border-top: 0; }
+  .c-time { padding: 14px; border-right: 1px solid var(--line); font-weight: 600; white-space: nowrap; }
+  .c-box { padding: 12px 14px 14px; min-width: 0; }
+  .box-head { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
+  .role { font-weight: 700; color: var(--navy); font-size: 16px; }
+  .fill { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .bar { height: 6px; background: #e6e8f2; border-radius: 3px; margin-top: 6px; width: 180px; max-width: 100%; overflow: hidden; }
+  .bar > span { display: block; height: 100%; background: var(--navy); border-radius: 3px; }
+  .bar.full > span { background: var(--ok); }
+  .btn { border: 0; border-radius: 6px; padding: 9px 16px; font-weight: 700; background: var(--red); color: #fff; min-width: 104px; }
+  .btn:hover { background: var(--red-dk); }
+  .btn:focus-visible, .ghost:focus-visible, input:focus-visible, textarea:focus-visible { outline: 3px solid #9aa3ee; outline-offset: 2px; }
+  .btn[disabled] { background: #c9cad3; color: #fff; cursor: default; }
+  .btn.navy { background: var(--navy); } .btn.navy:hover { background: var(--navy-dk); }
+  .ghost { background: none; border: 1px solid var(--line); border-radius: 6px; padding: 8px 14px; font-weight: 600; color: var(--ink); }
+  .tag { display: inline-block; font-size: 12px; font-weight: 700; padding: 3px 8px; border-radius: 999px; }
+  .tag.cancel { background: #fde8e9; color: var(--red-dk); }
+  .tag.closed { background: #eceef3; color: var(--muted); }
+  .note { font-size: 13px; color: var(--warn); margin-top: 6px; }
+
+  ul.people { list-style: none; margin: 12px 0 0; padding: 0; }
+  ul.people li { display: flex; justify-content: flex-end; align-items: flex-start; gap: 10px; padding: 7px 0; border-top: 1px dashed #e3e5ee; }
+  ul.people li:first-child { border-top: 0; }
+  .p-text { text-align: right; min-width: 0; }
+  .p-name { font-weight: 600; color: var(--navy-dk); }
+  .qty { display: inline-block; min-width: 22px; padding: 1px 6px; margin-left: 6px; border-radius: 999px; background: var(--red); color: #fff; font-size: 12px; font-weight: 700; text-align: center; }
+  .p-comment { font-size: 13px; color: var(--muted); overflow-wrap: anywhere; }
+  .avatar { flex: none; width: 32px; height: 32px; border-radius: 50%; background: var(--navy); color: #fff; font-size: 12px; font-weight: 700; display: grid; place-items: center; }
+  .empty { color: var(--muted); font-size: 13px; margin-top: 10px; font-style: italic; }
+
+  /* Your sign-up (manage) card */
+  .mine { margin-top: 18px; background: var(--card); border: 2px solid var(--navy); border-radius: 10px; padding: 16px; }
+  .mine h2 { margin: 0 0 4px; font-size: 18px; color: var(--navy); }
+  .mine .row { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; margin-top: 12px; }
+  .mine .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; align-items: center; }
+
+  /* Modal */
+  /* Absolute (not fixed) so the dialog opens next to what was tapped, even when the page is embedded in a tall Google Sites box. */
+  .overlay { position: absolute; left: 0; top: 0; width: 100%; min-height: 100%; background: rgba(20, 22, 45, .55); display: none; align-items: flex-start; justify-content: center; padding: 0 12px 24px; z-index: 10; }
+  .overlay.show { display: flex; }
+  .modal { background: var(--card); border-radius: 12px; width: 100%; max-width: 480px; box-shadow: 0 20px 60px rgba(0,0,0,.25); }
+  .modal-head { padding: 16px 18px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; gap: 12px; }
+  .modal-head h2 { margin: 0; font-size: 19px; color: var(--navy); }
+  .modal-head .sub { font-size: 13px; color: var(--muted); margin-top: 2px; }
+  .x { background: none; border: 0; font-size: 26px; line-height: 1; color: var(--muted); padding: 0 4px; }
+  .modal-body { padding: 16px 18px 18px; }
+  label { display: block; font-weight: 600; font-size: 14px; margin: 12px 0 4px; }
+  label .hint { font-weight: 400; color: var(--muted); font-size: 12px; }
+  input[type=text], input[type=email], input[type=tel], textarea { width: 100%; padding: 9px 10px; border: 1px solid #c3c6d4; border-radius: 6px; font: inherit; }
+  textarea { min-height: 60px; resize: vertical; }
+  .stepper { display: inline-flex; align-items: center; border: 1px solid #c3c6d4; border-radius: 6px; overflow: hidden; }
+  .stepper button { width: 38px; height: 38px; border: 0; background: var(--soft); font-size: 18px; font-weight: 700; color: var(--navy); }
+  .stepper input { width: 56px; height: 38px; border: 0; text-align: center; font: inherit; font-weight: 700; -moz-appearance: textfield; }
+  .stepper input::-webkit-inner-spin-button { -webkit-appearance: none; }
+  .private { margin-top: 16px; padding: 12px; border-radius: 8px; background: var(--soft); }
+  .private .ptitle { font-weight: 700; font-size: 13px; color: var(--navy); display: flex; align-items: center; gap: 6px; }
+  .private p { margin: 4px 0 0; font-size: 12.5px; color: #44485c; }
+  .check { display: flex; gap: 8px; align-items: flex-start; font-weight: 400; font-size: 13px; margin-top: 12px; }
+  .check input { margin-top: 3px; }
+  .err { color: var(--red-dk); background: #fde8e9; border-radius: 6px; padding: 8px 10px; font-size: 14px; margin-top: 12px; display: none; }
+  .err.show { display: block; }
+  .form-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px; }
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  .success { text-align: center; padding: 10px 4px 4px; }
+  .success .big { font-size: 40px; color: var(--ok); }
+
+  .just { position: relative; margin-top: 10px; padding: 10px 34px 10px 12px; border-radius: 8px; background: #e7f5ec; border: 1px solid #b7dfc5; color: #1e5e3a; font-size: 14px; }
+  .just-x { position: absolute; top: 4px; right: 6px; background: none; border: 0; font-size: 20px; line-height: 1; color: #1e5e3a; padding: 2px 6px; }
+  .loading { padding: 40px; text-align: center; color: var(--muted); }
+  footer { text-align: center; color: var(--muted); font-size: 13px; margin-top: 28px; }
+  .credit { text-align: center; color: var(--muted); font-size: 12px; margin-top: 3.5em; }
+  .credit img { width: 75px; height: auto; display: block; margin: 0 auto 6px; }
+
+  /* Phones */
+  @media (max-width: 760px) {
+    input[type=text], input[type=email], input[type=tel], input[type=number], textarea { font-size: 16px; }
+    .hero-in { flex-direction: column; align-items: center; text-align: center; gap: 10px; }
+    .logo { width: 120px; }
+    h1 { font-size: 23px; }
+    .byline { justify-content: center; }
+    .desc { text-align: left; }
+    .sched { background: none; border: 0; border-radius: 0; }
+    .sched-head { display: none; }
+    .day { display: block; background: var(--card); border: 1px solid var(--line); border-radius: 10px; margin-bottom: 14px; overflow: hidden; }
+    .day:first-of-type { border-top: 1px solid var(--line); }
+    .c-date { border: 0; background: var(--navy); color: #fff; padding: 10px 14px; display: flex; gap: 8px; align-items: baseline; }
+    .c-date .d { color: #fff; }
+    .c-date .w { color: #d5d8f5; }
+    .c-loc { border: 0; border-bottom: 1px solid var(--line); padding: 10px 14px; }
+    .slot { display: block; }
+    .c-time { border: 0; padding: 12px 14px 0; color: var(--muted); font-size: 13px; text-transform: uppercase; letter-spacing: .03em; }
+    .c-box { padding-top: 4px; }
+    .bar { width: 140px; }
+  }
+</style>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-in">
+      <img class="logo" alt="MTLL Challenger Division logo" src="logo.png">
+      <div>
+        <div class="org" id="org">MTLL Challenger</div>
+        <h1 id="title">Athlete Buddies</h1>
+        <div class="byline" id="byline"></div>
+        <div class="desc clamped" id="desc"></div>
+        <button class="more" id="moreBtn" hidden>Read more</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div id="mine"></div>
+    <div id="closedNote"></div>
+    <div class="meta-row">
+      <span>Choose a date and time, then tap <b>Sign Up</b>.</span>
+      <button type="button" class="manage-btn" onclick="openLookup(this)">Change or cancel my sign-up</button>
+    </div>
+    <div class="meta-row" style="margin-top:0;justify-content:flex-end"><span id="tzNote"></span></div>
+    <div class="sched" id="sched">
+      <div class="loading">Loading sign-ups…</div>
+    </div>
+    <footer id="footer"></footer>
+    <div class="credit">
+      <img alt="" src="mascot.png">
+      <div>Code &copy; Corey J. Ruff 2026 &middot; <span title="Page version">v2.0</span></div>
+    </div>
+  </main>
+
+  <!-- Sign-up dialog -->
+  <div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+    <div class="modal">
+      <div class="modal-head">
+        <div><h2 id="mTitle">Sign up</h2><div class="sub" id="mSub"></div></div>
+        <button class="x" type="button" aria-label="Close" onclick="closeModal()">&times;</button>
+      </div>
+      <div class="modal-body" id="mBody">
+        <form id="form" autocomplete="on" novalidate>
+          <label for="f-qty">How many volunteers are you bringing? <span class="hint" id="leftHint"></span></label>
+          <div class="stepper">
+            <button type="button" aria-label="Fewer" onclick="step('f-qty',-1)">−</button>
+            <input id="f-qty" name="qty" type="number" inputmode="numeric" min="1" value="1">
+            <button type="button" aria-label="More" onclick="step('f-qty',1)">+</button>
+          </div>
+
+          <label for="f-name">Your name <span class="hint">(shown on this page)</span></label>
+          <input id="f-name" name="name" type="text" maxlength="60" autocomplete="name" required>
+
+          <label for="f-comment">Comment <span class="hint">(optional, shown on this page, e.g. the kids' names or your team)</span></label>
+          <textarea id="f-comment" name="comment" maxlength="200"></textarea>
+
+          <div class="private">
+            <div class="ptitle">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+              Private contact info
+            </div>
+            <p>Only the Buddy Coordinator sees this. It's used for your confirmation, reminders, and game-day updates like rainouts. Signing up a student? Please use a parent or guardian's email and cell.</p>
+            <label for="f-email">Email</label>
+            <input id="f-email" name="email" type="email" maxlength="120" autocomplete="email" required>
+            <label for="f-phone">Cell number</label>
+            <input id="f-phone" name="phone" type="tel" maxlength="20" autocomplete="tel" placeholder="(610) 555-1234" required>
+            <label class="check"><input id="f-texts" type="checkbox"> <span>Text me game-day alerts (cancellations, weather). Msg &amp; data rates may apply. Reply STOP to opt out.</span></label>
+          </div>
+
+          <div class="hp" aria-hidden="true"><label>Leave blank <input id="f-website" type="text" tabindex="-1" autocomplete="off"></label></div>
+          <div class="err" id="formErr" role="alert"></div>
+          <div class="form-actions">
+            <button type="button" class="ghost" onclick="closeModal()">Cancel</button>
+            <button type="submit" class="btn" id="submitBtn">Sign Up</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Change / cancel lookup dialog -->
+  <div class="overlay" id="lookup" role="dialog" aria-modal="true" aria-labelledby="lkTitle">
+    <div class="modal">
+      <div class="modal-head">
+        <div><h2 id="lkTitle">Change or cancel my sign-up</h2><div class="sub">Use the code from your confirmation email.</div></div>
+        <button class="x" type="button" aria-label="Close" onclick="closeLookup()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="lkForm" novalidate>
+          <label for="lk-email" style="margin-top:0">Email you signed up with</label>
+          <input id="lk-email" type="email" autocomplete="email" maxlength="120">
+          <label for="lk-code">Sign-up code <span class="hint">(6 letters/numbers, e.g. K7P2QX)</span></label>
+          <input id="lk-code" type="text" maxlength="6" autocomplete="off" autocapitalize="characters" spellcheck="false" style="max-width:180px">
+          <div class="err" id="lkErr" role="alert"></div>
+          <div class="form-actions">
+            <button type="button" class="ghost" onclick="closeLookup()">Close</button>
+            <button type="submit" class="btn navy" id="lkBtn">Find my sign-up</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+<script>
+  /* MTLL Buddies Google Apps Script back end (the /exec link from Deploy > Manage deployments). */
+  var API_URL = 'https://script.google.com/macros/s/AKfycbyeYEek8L6VzQ4vyzDXN1NR7BnIlr-Ojw2oXBiTDaim2EuV8Wl8ss85ITm2K6OvTP-Pig/exec';
+  var TOKEN = (new URLSearchParams(location.search).get('t') || '').replace(/[^A-Za-z0-9]/g, '').slice(0, 64);
+
+  /* Stand-in for google.script.run: same withSuccessHandler/withFailureHandler style, but over fetch.
+     Plain-text POST = no CORS preflight; no cookies = no Google multi-account trouble. */
+  function run() {
+    var ok = function () {}, fail = function () {};
+    var o = {
+      withSuccessHandler: function (f) { ok = f; return o; },
+      withFailureHandler: function (f) { fail = f; return o; }
+    };
+    ['getPageData', 'submitSignup', 'getMySignup', 'lookupMySignup', 'updateMySignup', 'cancelMySignup'].forEach(function (fn) {
+      o[fn] = function () {
+        var args = Array.prototype.slice.call(arguments);
+        fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ fn: fn, args: args }), credentials: 'omit', redirect: 'follow' })
+          .then(function (r) { if (!r.ok) throw new Error('The sign-up sheet could not be reached (' + r.status + ').'); return r.json(); })
+          .then(function (out) { if (out && out.__error) throw new Error(out.__error); ok(out); })
+          .catch(function (e) { fail(/Failed to fetch|NetworkError|Load failed/i.test(String(e && e.message)) ? new Error('Could not reach the sign-up sheet. Check your internet connection and try again.') : e); });
+      };
+    });
+    return o;
+  }
+  var JUST = null; // the sign-up just made, shown as a green note in its slot
+  var DATA = null, CURRENT = null, MAXQTY = 1;
+
+  function esc(v) {
+    return String(v == null ? '' : v).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function initials(name) {
+    var p = String(name).trim().split(/\s+/).filter(Boolean);
+    if (!p.length) return '?';
+    return ((p[0][0] || '') + (p.length > 1 ? p[p.length - 1][0] : '')).toUpperCase();
+  }
+  function $(id) { return document.getElementById(id); }
+  function errMsg(e) { return (e && e.message ? e.message : String(e)).replace(/^Exception:\s*/, '').replace(/^Error:\s*/, ''); }
+
+  function load() {
+    run().withSuccessHandler(render).withFailureHandler(function (e) {
+      $('sched').innerHTML = '<div class="loading">Sorry, the sign-up sheet could not load. <button class="ghost" onclick="load()">Try again</button><br><small>' + esc(errMsg(e)) + '</small></div>';
+    }).getPageData();
+  }
+
+  function render(d) {
+    DATA = d;
+    document.title = d.title;
+    $('org').textContent = d.org;
+    $('title').textContent = d.title;
+    var by = '';
+    if (d.coordinator) by += '<span class="who"><span class="avatar" style="width:24px;height:24px;font-size:10px">' + esc(initials(d.coordinator)) + '</span>' + esc(d.coordinator) + '</span>';
+    if (d.contactEmail) by += '<a href="mailto:' + esc(d.contactEmail) + '">✉ Contact</a>';
+    $('byline').innerHTML = by;
+    $('desc').textContent = d.description;
+    setTimeout(function () {
+      var el = $('desc');
+      if (el.scrollHeight > el.clientHeight + 4) { $('moreBtn').hidden = false; }
+      else { el.classList.remove('clamped'); }
+    }, 0);
+    $('tzNote').textContent = 'Dates shown as mm/dd/yyyy · times ' + d.tzLabel;
+    $('closedNote').innerHTML = d.signupsOpen ? '' : '<div class="notice warn">Sign-ups are closed right now. Please check back later or contact the coordinator.</div>';
+    $('footer').innerHTML = d.contactEmail ? 'Questions? <a href="mailto:' + esc(d.contactEmail) + '">Contact ' + esc(d.coordinator || 'the coordinator') + '</a>' : '';
+
+    if (!d.days.length) {
+      $('sched').innerHTML = '<div class="loading">No dates have been posted yet. Check back soon!</div>';
+      return;
+    }
+    var h = '<div class="sched-head"><div>Date</div><div>Location</div><div class="h-slot"><div>Time</div><div>Available Slot</div></div></div>';
+    d.days.forEach(function (day) {
+      var map = day.address ? 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(day.location + ' ' + day.address) : '';
+      h += '<section class="day' + (day.past ? ' past' : '') + '">' +
+        '<div class="c-date"><div class="d">' + esc(day.date) + '</div><div class="w">' + esc(day.weekday) + '</div></div>' +
+        '<div class="c-loc"><div class="loc">' + esc(day.location) + '</div>' +
+          (day.address ? '<a href="' + map + '" target="_blank" rel="noopener">📍 ' + esc(day.address) + '</a>' : '') + '</div>' +
+        '<div class="c-slots">';
+      day.slots.forEach(function (s) { h += slotHtml(day, s); });
+      h += '</div></section>';
+    });
+    $('sched').innerHTML = h;
+    if (JUST) setTimeout(scrollToJust, 60);
+  }
+
+  function slotHtml(day, s) {
+    var full = s.left <= 0;
+    var pct = s.capacity ? Math.min(100, Math.round(100 * s.filled / s.capacity)) : 0;
+    var action;
+    if (s.status === 'Cancelled') action = '<span class="tag cancel">Cancelled</span>';
+    else if (s.status === 'Closed' || day.past || !DATA.signupsOpen) action = '<span class="tag closed">' + (day.past ? 'Past' : 'Closed') + '</span>';
+    else if (full) action = '<button class="btn" disabled>Full</button>';
+    else action = '<button class="btn" onclick="openModal(\'' + esc(s.id) + '\', this)">Sign Up</button>';
+    var fillText = full ? 'All ' + s.capacity + ' spots filled' : s.filled + ' of ' + s.capacity + ' spots filled';
+
+    var people = s.signups.map(function (p) {
+      return '<li><div class="p-text"><div><span class="p-name">' + esc(p.name) + '</span>' +
+        (p.qty > 1 ? '<span class="qty" title="Volunteers">' + p.qty + '</span>' : '') + '</div>' +
+        (p.comment ? '<div class="p-comment">💬 ' + esc(p.comment) + '</div>' : '') +
+        '</div><div class="avatar" aria-hidden="true">' + esc(initials(p.name)) + '</div></li>';
+    }).join('');
+
+    return '<div class="slot">' +
+      '<div class="c-time">' + esc(s.start) + '–<br>' + esc(s.end) + '</div>' +
+      '<div class="c-box">' +
+        '<div class="box-head"><div>' +
+          '<div class="role">' + esc(s.role) + '</div>' +
+          (s.location ? '<div class="fill">' + esc(s.location) + '</div>' : '') +
+          '<div class="fill">' + fillText + '</div>' +
+          '<div class="bar' + (full ? ' full' : '') + '"><span style="width:' + pct + '%"></span></div>' +
+        '</div>' + action + '</div>' +
+        (JUST && JUST.slotId === s.id ? justHtml() : '') +
+        (s.notes ? '<div class="note">' + esc(s.notes) + '</div>' : '') +
+        (people ? '<ul class="people">' + people + '</ul>' : '') +
+      '</div></div>';
+  }
+
+  function justHtml() {
+    return '<div class="just" id="justNote" role="status">' +
+      '<button type="button" class="just-x" aria-label="Dismiss" onclick="dismissJust()">&times;</button>' +
+      '<b>✓ You\'re signed up!</b> ' +
+      (JUST.emailed && JUST.email
+        ? 'A confirmation is on its way to <b>' + esc(JUST.email) + '</b> with your sign-up code for changes or cancelling. Don\'t see it? Check spam or promotions.'
+        : 'Thank you! Your sign-up is saved.') +
+      '</div>';
+  }
+  function dismissJust() { JUST = null; var n = $('justNote'); if (n) n.remove(); }
+  function scrollToJust() {
+    var n = $('justNote');
+    if (!n || JUST.scrolled) return;
+    JUST.scrolled = true;
+    try { n.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) { n.scrollIntoView(); }
+  }
+
+  /* ---------- Sign-up dialog ---------- */
+  function findSlot(id) {
+    for (var i = 0; i < DATA.days.length; i++) {
+      var day = DATA.days[i];
+      for (var j = 0; j < day.slots.length; j++) if (day.slots[j].id === id) return { day: day, slot: day.slots[j] };
+    }
+    return null;
+  }
+
+  /* Show an overlay with its dialog lined up next to the element that was tapped. */
+  function showOverlay(ov, anchor) {
+    var y = anchor ? anchor.getBoundingClientRect().top + window.pageYOffset : window.pageYOffset;
+    ov.style.minHeight = Math.max(document.documentElement.scrollHeight, window.innerHeight) + 'px';
+    ov.querySelector('.modal').style.marginTop = Math.max(16, y - 160) + 'px';
+    ov.classList.add('show');
+  }
+
+  function openModal(id, anchor) {
+    CURRENT = findSlot(id);
+    if (!CURRENT) return;
+    var s = CURRENT.slot, d = CURRENT.day;
+    MAXQTY = s.left;
+    $('mTitle').textContent = 'Sign up: ' + s.role;
+    $('mSub').textContent = d.weekday + ' ' + d.date + ' · ' + s.start + '–' + s.end + ' · ' + (s.location || d.location);
+    $('leftHint').textContent = '(' + s.left + (s.left === 1 ? ' spot' : ' spots') + ' left)';
+    $('f-qty').max = s.left;
+    $('f-qty').value = Math.min(1, s.left);
+    $('formErr').classList.remove('show');
+    $('submitBtn').disabled = false; $('submitBtn').textContent = 'Sign Up';
+    $('form').style.display = '';
+    var ok = $('mBody').querySelector('.success'); if (ok) ok.remove();
+    showOverlay($('overlay'), anchor);
+    setTimeout(function () { ($('f-name').value ? $('f-qty') : $('f-name')).focus({ preventScroll: true }); }, 50);
+  }
+  function closeModal() { $('overlay').classList.remove('show'); }
+  $('overlay').addEventListener('click', function (e) { if (e.target === this) closeModal(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeModal(); closeLookup(); } });
+
+  /* ---------- Change / cancel lookup ---------- */
+  function openLookup(anchor) {
+    $('lkErr').classList.remove('show');
+    $('lkBtn').disabled = false; $('lkBtn').textContent = 'Find my sign-up';
+    showOverlay($('lookup'), anchor);
+    setTimeout(function () { $('lk-email').focus({ preventScroll: true }); }, 50);
+  }
+  function closeLookup() { $('lookup').classList.remove('show'); }
+  $('lookup').addEventListener('click', function (e) { if (e.target === this) closeLookup(); });
+  $('lk-code').addEventListener('input', function () { this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, ''); });
+  $('lkForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var email = $('lk-email').value.trim(), code = $('lk-code').value.trim();
+    var err = $('lkErr'); err.classList.remove('show');
+    if (!email || code.length !== 6) { err.textContent = 'Please enter your email and the 6-character code.'; err.classList.add('show'); return; }
+    var btn = $('lkBtn'); btn.disabled = true; btn.textContent = 'Looking…';
+    run().withSuccessHandler(function (res) {
+      TOKEN = res.token;
+      closeLookup();
+      loadMine();
+    }).withFailureHandler(function (e2) {
+      btn.disabled = false; btn.textContent = 'Find my sign-up';
+      err.textContent = errMsg(e2); err.classList.add('show');
+    }).lookupMySignup(email, code);
+  });
+
+  function step(id, n) {
+    var el = $(id), max = parseInt(el.max, 10) || 99;
+    el.value = Math.max(1, Math.min(max, (parseInt(el.value, 10) || 0) + n));
+  }
+
+  function showErr(msg) { var el = $('formErr'); el.textContent = msg; el.classList.add('show'); }
+
+  $('form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    $('formErr').classList.remove('show');
+    var f = {
+      slotId: CURRENT.slot.id,
+      qty: $('f-qty').value,
+      name: $('f-name').value.trim(),
+      comment: $('f-comment').value.trim(),
+      email: $('f-email').value.trim(),
+      phone: $('f-phone').value.trim(),
+      textsOk: $('f-texts').checked,
+      website: $('f-website').value
+    };
+    var q = parseInt(f.qty, 10);
+    if (!(q >= 1)) return showErr('Please enter how many volunteers you are bringing.');
+    if (q > MAXQTY) return showErr('Only ' + MAXQTY + ' spots are left in this slot.');
+    if (!f.name) return showErr('Please enter your name.');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(f.email)) return showErr('Please enter a valid email address.');
+    if (f.phone.replace(/\D/g, '').replace(/^1(?=\d{10}$)/, '').length !== 10) return showErr('Please enter a 10-digit cell number.');
+
+    var btn = $('submitBtn'); btn.disabled = true; btn.textContent = 'Saving…';
+    run().withSuccessHandler(function (res) {
+      // Close the dialog and show the confirmation right inside the slot the person signed up for,
+      // so it's always where they're looking (no dialog to scroll back to on phones).
+      if (document.activeElement) document.activeElement.blur();
+      closeModal();
+      $('f-comment').value = '';
+      JUST = { slotId: f.slotId, email: res.email, emailed: res.emailed, scrolled: false };
+      render(DATA);
+      load();
+    }).withFailureHandler(function (err) {
+      btn.disabled = false; btn.textContent = 'Sign Up';
+      showErr(errMsg(err));
+      load();
+    }).submitSignup(f);
+  });
+
+  $('moreBtn').addEventListener('click', function () {
+    var el = $('desc');
+    var clamped = el.classList.toggle('clamped');
+    this.textContent = clamped ? 'Read more' : 'Show less';
+  });
+
+  /* ---------- Manage my sign-up (from email link) ---------- */
+  function loadMine() {
+    if (!TOKEN) return;
+    $('mine').innerHTML = '<div class="mine">Loading your sign-up…</div>';
+    run().withSuccessHandler(renderMine).withFailureHandler(function (e) {
+      $('mine').innerHTML = '<div class="notice warn">' + esc(errMsg(e)) + '</div>';
+    }).getMySignup(TOKEN);
+  }
+
+  function renderMine(m, flash) {
+    if (!m) {
+      $('mine').innerHTML = '<div class="notice warn">We couldn\'t find a sign-up for that link. It may have been removed. You can sign up again below.</div>';
+      return;
+    }
+    var h = '<div class="mine"><h2>Your sign-up</h2><div>' + esc(m.slotLabel) + '</div>' +
+      '<div style="color:var(--muted);font-size:13px">' + esc(m.name) + ' · ' + esc(m.email) + '</div>';
+    if (m.cancelled) {
+      h += '<p><span class="tag cancel">Cancelled</span> This sign-up has been cancelled. You can sign up again below.</p>';
+    } else if (m.slotStatus === 'Cancelled') {
+      h += '<p><span class="tag cancel">Game cancelled</span> This time slot has been cancelled by the coordinator.</p>';
+    } else if (!m.editable) {
+      h += '<p>You\'re signed up with <b>' + m.qty + '</b> volunteer(s). This sign-up can no longer be changed online.</p>';
+    } else {
+      h += '<div class="row"><div><label for="m-qty" style="margin-top:0">Volunteers</label>' +
+        '<div class="stepper"><button type="button" aria-label="Fewer" onclick="step(\'m-qty\',-1)">−</button>' +
+        '<input id="m-qty" type="number" min="1" max="' + m.maxQty + '" value="' + m.qty + '">' +
+        '<button type="button" aria-label="More" onclick="step(\'m-qty\',1)">+</button></div></div>' +
+        '<div style="flex:1;min-width:220px"><label for="m-comment" style="margin-top:0">Comment</label>' +
+        '<input id="m-comment" type="text" maxlength="200" value="' + esc(m.comment) + '"></div></div>' +
+        '<div class="err" id="mErr"></div>' +
+        '<div class="actions"><button class="btn navy" id="mSave" onclick="saveMine()">Save changes</button>' +
+        '<button class="ghost" id="mCancel" onclick="cancelMine(this)">Cancel my sign-up</button>' +
+        (flash ? '<span style="color:var(--ok);font-weight:600">✓ ' + esc(flash) + '</span>' : '') + '</div>';
+    }
+    h += '</div>';
+    $('mine').innerHTML = h;
+  }
+
+  function mineErr(e) { var el = $('mErr'); if (el) { el.textContent = errMsg(e); el.classList.add('show'); } }
+
+  function saveMine() {
+    $('mSave').disabled = true; $('mSave').textContent = 'Saving…';
+    run().withSuccessHandler(function (m) { renderMine(m, 'Saved'); load(); })
+      .withFailureHandler(function (e) { $('mSave').disabled = false; $('mSave').textContent = 'Save changes'; mineErr(e); })
+      .updateMySignup(TOKEN, { qty: $('m-qty').value, comment: $('m-comment').value });
+  }
+
+  function cancelMine(btn) {
+    if (!btn.dataset.confirm) {
+      btn.dataset.confirm = '1';
+      btn.textContent = 'Tap again to confirm cancel';
+      btn.style.borderColor = 'var(--red)'; btn.style.color = 'var(--red-dk)';
+      return;
+    }
+    btn.disabled = true; btn.textContent = 'Cancelling…';
+    run().withSuccessHandler(function (m) { renderMine(m); load(); })
+      .withFailureHandler(function (e) { btn.disabled = false; btn.textContent = 'Cancel my sign-up'; mineErr(e); })
+      .cancelMySignup(TOKEN);
+  }
+
+  load();
+  loadMine();
+</script>
+</body>
+</html>
